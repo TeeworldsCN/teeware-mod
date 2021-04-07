@@ -1,4 +1,5 @@
 // WarioWare mod by Headshotnoby
+#include <cstdio>
 
 #include <engine/server.h>
 #include <engine/shared/config.h>
