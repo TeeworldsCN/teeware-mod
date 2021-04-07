@@ -19,4 +19,4 @@ __build docker image:__
 
 ## run with docker container:
 
-	docker run --name=teeware-srv-1 --net=host -v /YOUR_PATH_TO_CFG_FILES/autoexec_server.cfg:/autoexec_server.cfg  -d teeware-mod-img
+	docker run --name=teeware-srv-1 --net=host -v /YOUR_PATH_TO_CFG_FILES/autoexec_server.cfg:/srv/autoexec_server.cfg  -d teeware-mod-img
