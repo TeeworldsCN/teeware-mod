@@ -43,7 +43,7 @@ void MGReachEndNade1::Start()
 	}
 
 	Controller()->setPlayerTimers(g_Config.m_WwSndMgReachEndNade1_Offset, g_Config.m_WwSndMgReachEndNade1_Length);
-	GameServer()->SendBroadcast("Reach the end!", -1);
+	GameServer()->SendBroadcast("安全抵达终点吧！", -1);
 }
 
 void MGReachEndNade1::End()

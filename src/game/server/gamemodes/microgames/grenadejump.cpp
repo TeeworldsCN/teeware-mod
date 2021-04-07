@@ -11,7 +11,7 @@ MGGrenadeJump::MGGrenadeJump(CGameContext* pGameServer, CGameControllerWarioWare
 
 void MGGrenadeJump::Start()
 {
-	GameServer()->SendBroadcast("Grenade jump!", -1);
+	GameServer()->SendBroadcast("榴弹跳！", -1);
 	Controller()->setPlayerTimers(g_Config.m_WwSndMgGrenadeJump_Offset, g_Config.m_WwSndMgGrenadeJump_Length);
 	
 	for (int i=0; i<MAX_CLIENTS; i++)

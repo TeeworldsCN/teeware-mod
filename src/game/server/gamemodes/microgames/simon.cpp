@@ -3,8 +3,8 @@
 #include <engine/shared/config.h>
 #include "simon.h"
 
-const char *simonNames[] = {"Simon", "Someone"};
-const char *simonModes[] = {"Jump", "Look up", "Look down"};
+const char *simonNames[] = {"大鬼", "小鬼"};
+const char *simonModes[] = {"快跳", "看天上", "看地下"};
 const float PI = 3.141592653589793f;
 
 MGSimon::MGSimon(CGameContext* pGameServer, CGameControllerWarioWare* pController) : Microgame(pGameServer, pController)
@@ -22,7 +22,7 @@ void MGSimon::Start()
 		Controller()->g_Complete[i] = (m_Someone) ? true : false;
 	
 	char aBuf[96];
-	str_format(aBuf, sizeof(aBuf), "%s says: %s!", simonNames[m_Someone], simonModes[m_SimonMode]);
+	str_format(aBuf, sizeof(aBuf), "%s说： %s！", simonNames[m_Someone], simonModes[m_SimonMode]);
 	GameServer()->SendBroadcast(aBuf, -1);
 
 	Controller()->setPlayerTimers(g_Config.m_WwSndMgSimonSays_Offset, g_Config.m_WwSndMgSimonSays_Length);
@@ -55,7 +55,7 @@ void MGSimon::Tick()
 				{
 					Controller()->g_Complete[i] = false;
 					Char->Die(i, WEAPON_WORLD, timeLeft/1000.f);
-					GameServer()->SendChatTarget(i, "Simon didn't say it!...");
+					GameServer()->SendChatTarget(i, "不能听小鬼的。。。");
 				}
 				else
 					Controller()->winMicroGame(i);

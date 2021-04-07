@@ -2788,7 +2788,7 @@ void CGameContext::OnInit(/*class IKernel *pKernel*/)
 	OnClientConnected(MAX_CLIENTS-1); // need this dummy for a microgame
 	m_apPlayers[MAX_CLIENTS-1]->SetTeam(TEAM_SPECTATORS, false);
 	m_apPlayers[MAX_CLIENTS-1]->setVoluntarySpectator(true);
-	Server()->SetClientName(MAX_CLIENTS-1, "bot");
+	Server()->SetClientName(MAX_CLIENTS-1, "电脑");
 	str_copy(m_apPlayers[MAX_CLIENTS-1]->m_TeeInfos.m_SkinName, "Bot", sizeof(m_apPlayers[MAX_CLIENTS-1]->m_TeeInfos.m_SkinName));
 }
 

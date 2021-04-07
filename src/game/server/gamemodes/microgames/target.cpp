@@ -29,11 +29,11 @@ void MGTarget::Start()
 	// teleport the bot player (the target)
 	int bot_tele = 7;
 	int Num = Controller()->m_TeleOuts[bot_tele-1].size();
-	Server()->SetClientName(MAX_CLIENTS-1, "HIT ME");
+	Server()->SetClientName(MAX_CLIENTS-1, "目标");
 	GameServer()->m_apPlayers[MAX_CLIENTS-1]->SetTeam(0, false); // move to game
 	GameServer()->m_apPlayers[MAX_CLIENTS-1]->ForceSpawn(Controller()->m_TeleOuts[bot_tele-1][(!Num)?Num:rand() % Num]);
 	
-	GameServer()->SendBroadcast("Hit the target!", -1);
+	GameServer()->SendBroadcast("打中目标吧！", -1);
 	Controller()->setPlayerTimers(g_Config.m_WwSndMgHitTheTarget_Offset, g_Config.m_WwSndMgHitTheTarget_Length);
 }
 
@@ -53,7 +53,7 @@ void MGTarget::End()
 
 	// move bot back to spec
 	GameServer()->m_apPlayers[MAX_CLIENTS-1]->SetTeam(TEAM_SPECTATORS, false);
-	Server()->SetClientName(MAX_CLIENTS-1, "bot");
+	Server()->SetClientName(MAX_CLIENTS-1, "电脑");
 }
 
 void MGTarget::Tick()

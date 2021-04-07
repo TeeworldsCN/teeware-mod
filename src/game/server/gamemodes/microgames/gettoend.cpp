@@ -22,7 +22,7 @@ void MGGetToEnd::Start()
 		Char->SetCollideOthers(false);
 	}
 	
-	GameServer()->SendBroadcast("Get to the end!", -1);
+	GameServer()->SendBroadcast("冲向终点！", -1);
 	Controller()->setPlayerTimers(g_Config.m_WwSndMgGetToEnd_Offset, g_Config.m_WwSndMgGetToEnd_Length);
 }
 

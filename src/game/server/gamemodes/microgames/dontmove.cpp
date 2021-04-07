@@ -3,7 +3,7 @@
 #include <engine/shared/config.h>
 #include "dontmove.h"
 
-const char *modes[2] = {"Don't move!", "Don't stop moving!"};
+const char *modes[2] = {"快站好，不要动！", "动起来，不要停！"};
 
 
 MGDontMove::MGDontMove(CGameContext* pGameServer, CGameControllerWarioWare* pController) : Microgame(pGameServer, pController)

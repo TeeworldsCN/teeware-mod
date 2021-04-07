@@ -45,7 +45,7 @@ void MGBombRain::Start()
 		Controller()->g_Complete[i] = true;
 
 	m_startTick = Server()->Tick();
-	GameServer()->SendBroadcast("Avoid the bombs!", -1);
+	GameServer()->SendBroadcast("躲避炸弹吧！", -1);
 	Controller()->setPlayerTimers(g_Config.m_WwSndMgBombRain_Offset, g_Config.m_WwSndMgBombRain_Length);
 
 	// set to a slower speed

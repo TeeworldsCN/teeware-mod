@@ -17,13 +17,13 @@ void MGNinjaSurvival::Start()
 	for (int i=0; i<MAX_CLIENTS-1; i++)
 		Controller()->g_Complete[i] = (GameServer()->GetPlayerChar(i));
 
-	GameServer()->SendBroadcast("Survive the ninja!", -1);
+	GameServer()->SendBroadcast("小心忍者！", -1);
 	Controller()->setPlayerTimers(g_Config.m_WwSndMgSurvive_Offset, g_Config.m_WwSndMgSurvive_Length);
 }
 
 void MGNinjaSurvival::End()
 {
-	Server()->SetClientName(MAX_CLIENTS-1, "bot");
+	Server()->SetClientName(MAX_CLIENTS-1, "电脑");
 	GameServer()->m_apPlayers[MAX_CLIENTS-1]->SetTeam(TEAM_SPECTATORS, false); // move to spec
 
 	// reset player healths
@@ -40,7 +40,7 @@ void MGNinjaSurvival::Tick()
 {
 	if (Server()->Tick() - m_startTick > 225 and not m_Moved)
 	{
-		Server()->SetClientName(MAX_CLIENTS-1, "Ninja");
+		Server()->SetClientName(MAX_CLIENTS-1, "忍者");
 		GameServer()->m_apPlayers[MAX_CLIENTS-1]->SetTeam(0, false); // move to game
 		m_Moved = true;
 

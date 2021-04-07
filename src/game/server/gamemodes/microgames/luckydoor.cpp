@@ -59,7 +59,7 @@ void MGLuckyDoor::Start()
 		Controller()->teleportPlayer(i, 13);
 	}
 
-	GameServer()->SendBroadcast("Enter a door!", -1);
+	GameServer()->SendBroadcast("选个门吧！", -1);
 	Controller()->setPlayerTimers(g_Config.m_WwSndMgLuckyDoor_Offset, g_Config.m_WwSndMgLuckyDoor_Length);
 }
 

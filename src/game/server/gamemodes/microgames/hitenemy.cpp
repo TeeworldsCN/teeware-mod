@@ -11,7 +11,7 @@ MGHitEnemy::MGHitEnemy(CGameContext* pGameServer, CGameControllerWarioWare* pCon
 
 void MGHitEnemy::Start()
 {
-	GameServer()->SendBroadcast("Hit an enemy!", -1);
+	GameServer()->SendBroadcast("打中一名敌人吧！", -1);
 	Controller()->setPlayerTimers(g_Config.m_WwSndMgHitEnemy_Offset, g_Config.m_WwSndMgHitEnemy_Length);
 }
 

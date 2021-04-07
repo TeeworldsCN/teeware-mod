@@ -4,10 +4,10 @@
 #include "tilecolors.h"
 
 const char *colorNames[4][5] = {
-	{"RED", "ROSE", "GRENADE", "CHERRY", "HEART"},
-	{"GREEN", "GRASS", "LEAF", "CACTUS", "FROG"},
-	{"BLUE", "OCEAN", "WATER", "BLUE", "SONIC"},
-	{"YELLOW", "SUN", "RUBBER DUCKY", "EGG YOLK", "BANANA"}
+	{"大红色", "玫瑰色", "榴弹色", "樱桃色", "大鬼色"},
+	{"葱绿色", "草地色", "树叶色", "竹子色", "青蛙色"},
+	{"天蓝色", "大海色", "泳池色", "蓝莓色", "三精色"},
+	{"蛋黄色", "太阳色", "小鸭色", "玉米色", "香蕉色"}
 };
 
 
@@ -89,6 +89,6 @@ void MGTileColors::setAndSayColor()
 	m_colorName = rand() % 5;
 
 	char aBuf[128];
-	str_format(aBuf, sizeof(aBuf), "%d.\nGo to the room with the %s color!", m_turn+1, colorNames[m_currColor][m_colorName]);
+	str_format(aBuf, sizeof(aBuf), "%d。\n请去%s的房间", m_turn+1, colorNames[m_currColor][m_colorName]);
 	GameServer()->SendBroadcast(aBuf, -1);
 }

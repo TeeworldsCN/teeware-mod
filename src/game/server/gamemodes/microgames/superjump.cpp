@@ -21,7 +21,7 @@ void MGSuperJump::Start()
 		Char->SetSuperJump(true);
 	}
 
-	GameServer()->SendBroadcast("Touch the sky!", -1);
+	GameServer()->SendBroadcast("直上云霄吧！", -1);
 	Controller()->setPlayerTimers(g_Config.m_WwSndMgTouchSky_Offset, g_Config.m_WwSndMgTouchSky_Length);
 }
 

@@ -23,7 +23,7 @@ void MGParachute::Start()
 		Controller()->teleportPlayer(i, 4);
 	}
 
-	GameServer()->SendBroadcast("Get on the platform!", -1);
+	GameServer()->SendBroadcast("落在平台上吧！", -1);
 	Controller()->setPlayerTimers(g_Config.m_WwSndMgGetOnPlatform2_Offset, g_Config.m_WwSndMgGetOnPlatform2_Length);
 }
 

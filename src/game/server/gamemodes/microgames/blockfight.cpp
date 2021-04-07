@@ -19,7 +19,7 @@ void MGBlockFight::Start()
 		Controller()->teleportPlayer(i, 2);
 	}
 	
-	GameServer()->SendBroadcast("Fight and stay alive!", -1);
+	GameServer()->SendBroadcast("尽可能存活吧！", -1);
 	Controller()->setPlayerTimers(g_Config.m_WwSndMgFightStayAlive_Offset, g_Config.m_WwSndMgFightStayAlive_Length);
 }
 

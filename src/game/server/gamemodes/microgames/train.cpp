@@ -22,7 +22,7 @@ void MGTrain::Start()
 		Controller()->teleportPlayer(i, 3);
 	}
 	
-	GameServer()->SendBroadcast("Avoid the train!", -1);
+	GameServer()->SendBroadcast("躲避火车！", -1);
 	Controller()->setPlayerTimers(g_Config.m_WwSndMgAvoidTrain_Offset, g_Config.m_WwSndMgAvoidTrain_Length);
 }
 
