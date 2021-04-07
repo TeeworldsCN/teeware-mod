@@ -100,7 +100,7 @@ void CGameControllerWarioWare::StartRound()
 	
 	if (m_state == WW_WAITING)
 	{
-		GameServer()->SendBroadcast("Waiting for players...", -1);
+		GameServer()->SendBroadcast("等待其他玩家。。。", -1);
 		int songs1[2] = {g_Config.m_WwSndWaiting1_Offset, g_Config.m_WwSndWaiting2_Offset};
 		int songs2[2] = {g_Config.m_WwSndWaiting1_Length, g_Config.m_WwSndWaiting2_Length};
 		int ind = rand() % 2;
@@ -190,7 +190,7 @@ void CGameControllerWarioWare::nextWarioState()
 
 			for (int i=0; i<MAX_CLIENTS-1; i++)
 			{
-				GameServer()->SendBroadcast((g_Complete[i]) ? "You win!" : "You failed...", i);
+				GameServer()->SendBroadcast((g_Complete[i]) ? "成功过关！" : "你失败了。。。", i);
 
 				CCharacter *Char = GameServer()->GetPlayerChar(i);
 				if (not Char) continue;
@@ -207,7 +207,7 @@ void CGameControllerWarioWare::nextWarioState()
 		case WW_WINLOSE: // finished showing win/lose text
 			if (m_round+1 == g_Config.m_WwMaxRounds/2) // speedup
 			{
-				GameServer()->SendBroadcast("Speed up!", -1);
+				GameServer()->SendBroadcast("游戏加速！", -1);
 				setPlayerTimers(g_Config.m_WwSndSpeedUp_Offset, g_Config.m_WwSndSpeedUp_Length);
 				m_warioState = WW_SPEEDUP;
 				m_speedUp = true;
@@ -215,7 +215,7 @@ void CGameControllerWarioWare::nextWarioState()
 			}
 			else if (m_round+1 == g_Config.m_WwMaxRounds) // boss
 			{
-				GameServer()->SendBroadcast("   Boss time!\nWorth 5 points", -1);
+				GameServer()->SendBroadcast("最终决战！\n胜者得5分", -1);
 				setPlayerTimers(g_Config.m_WwSndBoss_Offset, g_Config.m_WwSndBoss_Length);
 				m_warioState = WW_BOSSWARN;
 				m_speedUp = false;
@@ -229,7 +229,7 @@ void CGameControllerWarioWare::nextWarioState()
 			// go to jingle
 		case WW_SPEEDUP:
 		case WW_BOSSWARN:
-			str_format(aBuf, sizeof(aBuf), "Round %d", m_round+1);
+			str_format(aBuf, sizeof(aBuf), "第 %d 回合", m_round+1);
 			GameServer()->SendBroadcast(aBuf, -1); // clear win/lose message
 
 			if (not m_speedUp)
@@ -352,7 +352,7 @@ void CGameControllerWarioWare::doGameOver()
 		char name[128];
 
 		str_format(name, sizeof(name), "%s'%s'%s",
-			(finalWinners.size() > 1 and i == finalWinners.size()-1) ? "and " : "",
+			(finalWinners.size() > 1 and i == finalWinners.size()-1) ? "和" : "",
 			Server()->ClientName(finalWinners[i]),
 			(finalWinners.size() > 1 and i < finalWinners.size()-2) ? ", " : " "
 		);
@@ -360,7 +360,7 @@ void CGameControllerWarioWare::doGameOver()
 		winStr += name;
 	}
 
-	str_format(aBuf, sizeof(aBuf), "%s%s!", winStr.c_str(), (finalWinners.size() > 1) ? "win" : "wins");
+	str_format(aBuf, sizeof(aBuf), "%s%s！", winStr.c_str(), "获胜");
 
 	GameServer()->SendChat(-1, CGameContext::CHAT_ALL, aBuf);
 	m_warioState = WW_GAMEOVER;
@@ -439,7 +439,7 @@ void CGameControllerWarioWare::Tick()
 		case WW_WAITING:
 			if (online < 2)
 			{
-				if (GameServer()->Server()->Tick() % 150 == 0) GameServer()->SendBroadcast("Waiting for players...", -1);
+				if (GameServer()->Server()->Tick() % 150 == 0) GameServer()->SendBroadcast("等待其他玩家。。。", -1);
 			}
 			else
 			{
@@ -450,7 +450,7 @@ void CGameControllerWarioWare::Tick()
 		case WW_INGAME:
 			if (online < 2)
 			{
-				GameServer()->SendBroadcast("Waiting for players...", -1);
+				GameServer()->SendBroadcast("等待其他玩家。。。", -1);
 				int songs1[2] = {g_Config.m_WwSndWaiting1_Offset, g_Config.m_WwSndWaiting2_Offset};
 				int songs2[2] = {g_Config.m_WwSndWaiting1_Length, g_Config.m_WwSndWaiting2_Length};
 				int ind = rand() % 2;

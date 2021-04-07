@@ -89,6 +89,6 @@ void MGTileColors::setAndSayColor()
 	m_colorName = rand() % 5;
 
 	char aBuf[128];
-	str_format(aBuf, sizeof(aBuf), "%d。\n请去%s的房间", m_turn+1, colorNames[m_currColor][m_colorName]);
+	str_format(aBuf, sizeof(aBuf), "%d.\n去%s的房间", m_turn+1, colorNames[m_currColor][m_colorName]);
 	GameServer()->SendBroadcast(aBuf, -1);
 }
