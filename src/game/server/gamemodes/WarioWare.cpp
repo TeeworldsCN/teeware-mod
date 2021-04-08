@@ -88,6 +88,8 @@ void CGameControllerWarioWare::StartRound()
 		if (not GameServer()->m_apPlayers[i]) continue;
 		GameServer()->m_apPlayers[i]->m_Score = 0;
 		if (GameServer()->m_apPlayers[i]->IsVoluntarySpectator()) continue;
+		else if (GameServer()->m_apPlayers[i]->GetTeam() == TEAM_SPECTATORS)
+			GameServer()->m_apPlayers[i]->SetTeam(0, false);
 
 		++online;
 	}
@@ -117,10 +119,13 @@ void CGameControllerWarioWare::setPlayerTimers(float offset, float length)
 {
 	for (int i=0; i<MAX_CLIENTS; i++)
 	{
-		if (not GameServer()->m_apPlayers[i] or not GameServer()->m_apPlayers[i]->GetCharacter()) continue;
+		if (not GameServer()->m_apPlayers[i]) continue;
 		CCharacter *Char = GameServer()->m_apPlayers[i]->GetCharacter();
-		
-		Char->setTimer(offset-60);
+
+		if (Char)
+			Char->setTimer(offset-60);
+		else
+			GameServer()->m_apPlayers[i]->SetSpawnTimer(offset-60);
 	}
 	
 	setTimer(offset-60);
@@ -153,8 +158,9 @@ void CGameControllerWarioWare::teleportPlayer(int client, int tele_id)
 void CGameControllerWarioWare::teleportPlayerToSpawn(int client)
 {
 	CPlayer *Player = GameServer()->m_apPlayers[client];
-	CCharacter *Char = Player->GetCharacter();
-	
+	CCharacter *Char = (Player) ? Player->GetCharacter() : 0;
+	if (not Char) return;
+
 	vec2 SpawnPos;
 	if(CanSpawn(Player->GetTeam(), &SpawnPos))
 	{
@@ -190,15 +196,16 @@ void CGameControllerWarioWare::nextWarioState()
 
 			for (int i=0; i<MAX_CLIENTS-1; i++)
 			{
-				GameServer()->SendBroadcast((g_Complete[i]) ? "成功过关！" : "你失败了。。。", i);
+				if (not GameServer()->m_apPlayers[i]) continue;
 
+				GameServer()->SendBroadcast((g_Complete[i]) ? "成功过关！" : "你失败了。。。", i);
 				CCharacter *Char = GameServer()->GetPlayerChar(i);
-				if (not Char) continue;
 
 				if (g_Complete[i])
 				{
 					GameServer()->m_apPlayers[i]->m_Score += (m_round == g_Config.m_WwMaxRounds) ? 5 : 1;
 					if (Char) Char->setTimer((not m_speedUp) ? g_Config.m_WwSndWin_Offset : g_Config.m_WwSndWinFast_Offset);
+					else GameServer()->m_apPlayers[i]->SetSpawnTimer((not m_speedUp) ? g_Config.m_WwSndWin_Offset : g_Config.m_WwSndWinFast_Offset);
 				}
 			}
 			m_warioState = WW_WINLOSE;
@@ -253,7 +260,7 @@ void CGameControllerWarioWare::nextWarioState()
 void CGameControllerWarioWare::onMicroGameEnd()
 {
 	m_microgames[m_microgame]->End();
-	for (int i=0; i<MAX_CLIENTS; i++)
+	for (int i=0; i<MAX_CLIENTS-1; i++)
 	{
 		CPlayer *Player = GameServer()->m_apPlayers[i];
 		CCharacter *Char = GameServer()->GetPlayerChar(i);
@@ -261,7 +268,7 @@ void CGameControllerWarioWare::onMicroGameEnd()
 		if (Player and Player->IsOut())
 		{
 			Player->SetTeam(0, false);
-			Player->TryRespawn();
+			if (not Char) Player->Respawn();
 		}
 
 		if (not Char) continue;
@@ -342,8 +349,7 @@ void CGameControllerWarioWare::doGameOver()
 				Player->GetCharacter()->setTimer(g_Config.m_WwSndFinalWin_Offset);
 		}
 	}
-	
-	GameServer()->SendBroadcast("", -1);
+
 	char aBuf[128];
 
 	std::string winStr;
@@ -362,7 +368,7 @@ void CGameControllerWarioWare::doGameOver()
 
 	str_format(aBuf, sizeof(aBuf), "%s%s！", winStr.c_str(), "获胜");
 
-	GameServer()->SendChat(-1, CGameContext::CHAT_ALL, aBuf);
+	GameServer()->SendBroadcast(aBuf, -1);
 	m_warioState = WW_GAMEOVER;
 }
 

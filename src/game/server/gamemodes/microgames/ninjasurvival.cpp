@@ -15,7 +15,17 @@ void MGNinjaSurvival::Start()
 	m_startTick = Server()->Tick();
 
 	for (int i=0; i<MAX_CLIENTS-1; i++)
+	{
+		CPlayer *Player = GameServer()->m_apPlayers[i];
+		CCharacter *Char = (Player) ? Player->GetCharacter() : 0;
+		if (not Char) continue;
+
+		Player->SetInfoLock(true); // prevent skin change
+		if (str_comp_nocase(Server()->ClientName(i), "ninja") == 0) // remove fake
+			Server()->SetClientName(i, "fake");
+
 		Controller()->g_Complete[i] = (GameServer()->GetPlayerChar(i));
+	}
 
 	GameServer()->SendBroadcast("小心忍者！", -1);
 	Controller()->setPlayerTimers(g_Config.m_WwSndMgSurvive_Offset, g_Config.m_WwSndMgSurvive_Length);
@@ -29,9 +39,14 @@ void MGNinjaSurvival::End()
 	// reset player healths
 	for (int i=0; i<MAX_CLIENTS-1; i++)
 	{
-		CCharacter *Char = GameServer()->GetPlayerChar(i);
-		if (not Char) continue;
+		CPlayer *Player = GameServer()->m_apPlayers[i];
+		CCharacter *Char = (Player) ? Player->GetCharacter() : 0;
 
+		if (not Player) continue;
+		Player->SetInfoLock(false);
+		str_copy(Player->m_TeeInfos.m_SkinName, Player->original_skin, sizeof(Player->m_TeeInfos.m_SkinName));
+
+		if (not Char) continue;
 		Char->SetHealth(10);
 	}
 }
@@ -71,6 +86,7 @@ void MGNinjaSurvival::OnCharacterDamage(int Victim, int Killer, int Dmg, int Wea
 	{
 		CCharacter *pVictim = GameServer()->GetPlayerChar(Victim);
 		CCharacter *pKiller = GameServer()->GetPlayerChar(Killer);
+		if (not pVictim or not pKiller) return;
 
 		pVictim->SetHealth(pVictim->GetHealth() - Dmg);
 
