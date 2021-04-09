@@ -978,15 +978,15 @@ void CGameContext::OnClientEnter(int ClientID)
 
 		if (controller->getMicroGame()->m_boss)
 		{
-			str_format(abuf, sizeof(abuf), "=== Please wait %d seconds for the boss to end! ===", (int)(timeLeft/1000.f));
-			str_format(abuf2, sizeof(abuf2), "=== Current boss: '%s' ===", controller->getMicroGame()->m_microgameName);
-			SendChatTarget(ClientID, "=== BOSS ROUND IS ON! ===");
+			str_format(abuf, sizeof(abuf), "=== 请稍等，最终决战还有 %d秒 结束 ===", (int)(timeLeft/1000.f));
+			str_format(abuf2, sizeof(abuf2), "=== 当前小游戏: '%s' ===", controller->getMicroGame()->m_microgameName);
+			SendChatTarget(ClientID, "=== 最终决战进行中 ===");
 		}
 		else
 		{
-			str_format(abuf, sizeof(abuf), "=== Please wait %d seconds for the microgame to end. ===", (int)(timeLeft/1000.f));
-			str_format(abuf2, sizeof(abuf2), "=== Current microgame: '%s' ===", controller->getMicroGame()->m_microgameName);
-			SendChatTarget(ClientID, "=== Welcome! ===");
+			str_format(abuf, sizeof(abuf), "=== 请稍等，上个小游戏还有 %d秒 结束 ===", (int)(timeLeft/1000.f));
+			str_format(abuf2, sizeof(abuf2), "=== 当前小游戏: '%s' ===", controller->getMicroGame()->m_microgameName);
+			SendChatTarget(ClientID, "=== 欢迎！===");
 		}
 
 		SendChatTarget(ClientID, abuf);
@@ -1007,7 +1007,7 @@ void CGameContext::OnClientEnter(int ClientID)
 		str_copy(m_apPlayers[ClientID]->original_skin, m_apPlayers[ClientID]->m_TeeInfos.m_SkinName, sizeof(m_apPlayers[ClientID]->original_skin));
 		m_apPlayers[ClientID]->original_color = m_apPlayers[ClientID]->m_TeeInfos.m_UseCustomColor;
 
-		SendChatTarget(ClientID, "TeeWare mod by Headshot");
+		SendChatTarget(ClientID, "TeeWare v1.1 mod by Headshot");
 
 		if(g_Config.m_SvWelcome[0]!=0)
 			SendChatTarget(ClientID,g_Config.m_SvWelcome);
@@ -1554,7 +1554,7 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 				{
 					//pPlayer->m_LastSetTeam = Server()->Tick();
 
-					if (Controller->isInGame() and Controller->inMicroGame() and (pPlayer->IsOut()))
+					if (Controller->isInGame() and Controller->inMicroGame() and (pPlayer->GetTeam() == TEAM_SPECTATORS))
 					{
 						SendChatTarget(ClientID, "Wait for the current microgame to end.");
 						return;

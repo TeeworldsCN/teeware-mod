@@ -196,7 +196,7 @@ void CGameControllerWarioWare::nextWarioState()
 
 			for (int i=0; i<MAX_CLIENTS-1; i++)
 			{
-				if (not GameServer()->m_apPlayers[i]) continue;
+				if (not GameServer()->m_apPlayers[i] or GameServer()->m_apPlayers[i]->IsVoluntarySpectator()) continue;
 
 				GameServer()->SendBroadcast((g_Complete[i]) ? "成功过关！" : "你失败了。。。", i);
 				CCharacter *Char = GameServer()->GetPlayerChar(i);
@@ -314,10 +314,10 @@ void CGameControllerWarioWare::rollMicroGame()
 		++online;
 	}
 
-	m_microgames[m_microgame]->Start();
 	char aBuf[128];
 	str_format(aBuf, sizeof(aBuf), "round %d: '%s'", m_round+1, m_microgames[m_microgame]->m_microgameName);
 	GameServer()->Console()->Print(IConsole::OUTPUT_LEVEL_DEBUG, "TeeWare", aBuf);
+	m_microgames[m_microgame]->Start();
 }
 
 void CGameControllerWarioWare::doGameOver()

@@ -22,7 +22,7 @@ void MGFlood::Start()
 		Controller()->teleportPlayer(i, 5);
 	}
 	
-	GameServer()->SendBroadcast("踩上平台吧！", -1);
+	GameServer()->SendBroadcast("小心被废水淹没！", -1);
 	Controller()->setPlayerTimers(g_Config.m_WwSndMgGetOnPlatform_Offset, g_Config.m_WwSndMgGetOnPlatform_Length);
 }
 
