@@ -24,6 +24,7 @@ void MGHitCow::Start()
 			Server()->SetClientName(i, "fake");
 
 		Char->SetCollideOthers(false); // FATTIES
+		Char->SetHookOthers(false); // trolls batting the cow away
 		Controller()->teleportPlayer(i, 9);
 	}
 
@@ -62,7 +63,7 @@ void MGHitCow::End()
 
 	// move bot back to spec
 	GameServer()->m_apPlayers[MAX_CLIENTS-1]->SetTeam(TEAM_SPECTATORS, false);
-	str_copy(GameServer()->m_apPlayers[MAX_CLIENTS-1]->m_TeeInfos.m_SkinName, "Bot", sizeof(GameServer()->m_apPlayers[MAX_CLIENTS-1]->m_TeeInfos.m_SkinName));
+	str_copy(GameServer()->m_apPlayers[MAX_CLIENTS-1]->m_TeeInfos.m_SkinName, "itsabot", sizeof(GameServer()->m_apPlayers[MAX_CLIENTS-1]->m_TeeInfos.m_SkinName));
 	GameServer()->m_apPlayers[MAX_CLIENTS-1]->m_TeeInfos.m_UseCustomColor = 0;
 	Server()->SetClientName(MAX_CLIENTS-1, "电脑");
 }

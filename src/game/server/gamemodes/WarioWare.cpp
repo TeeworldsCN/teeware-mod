@@ -145,7 +145,7 @@ void CGameControllerWarioWare::teleportPlayer(int client, int tele_id)
 		return;
 	}
 	vec2 outPos = m_TeleOuts[tele_id-1][(!Num)?Num:rand() % Num];
-	Char->Core()->m_Pos = outPos;
+	Char->m_Pos = Char->Core()->m_Pos = Char->m_PrevPos = outPos;
 
 	Char->Core()->m_HookedPlayer = -1;
 	Char->Core()->m_HookState = HOOK_RETRACTED;
@@ -345,8 +345,6 @@ void CGameControllerWarioWare::doGameOver()
 			CPlayer *Player = GameServer()->m_apPlayers[i];
 			if (Player->m_Score == highest)
 				finalWinners.push_back(i);
-			if (Player->GetCharacter())
-				Player->GetCharacter()->setTimer(g_Config.m_WwSndFinalWin_Offset);
 		}
 	}
 
@@ -364,6 +362,12 @@ void CGameControllerWarioWare::doGameOver()
 		);
 
 		winStr += name;
+
+		CPlayer *Player = GameServer()->m_apPlayers[finalWinners[i]];
+		if (Player->GetCharacter())
+			Player->GetCharacter()->setTimer(g_Config.m_WwSndFinalWin_Offset);
+		else
+			Player->SetSpawnTimer(g_Config.m_WwSndFinalWin_Offset);
 	}
 
 	str_format(aBuf, sizeof(aBuf), "%s%s！", winStr.c_str(), "获胜");
