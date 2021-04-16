@@ -4,7 +4,10 @@
 #include "simon.h"
 
 const char *simonNames[] = {"大鬼", "小鬼"};
-const char *simonModes[] = {"快跳", "看天上", "看地下"};
+const char *simonModes[2][3] = {
+	{"快跳", "快看天上", "快看地下"},
+	{"别跳", "别看天上", "别看地下"}
+};
 const float PI = 3.141592653589793f;
 
 MGSimon::MGSimon(CGameContext* pGameServer, CGameControllerWarioWare* pController) : Microgame(pGameServer, pController)
@@ -17,12 +20,13 @@ void MGSimon::Start()
 {
 	m_Someone = rand() % 2; // simon/someone
 	m_SimonMode = rand() % 3; // simons[] array
+	m_SimonNegative = rand() % 2; // do/don't
 	
 	for (int i=0; i<MAX_CLIENTS; i++)
-		Controller()->g_Complete[i] = (m_Someone) ? true : false;
+		Controller()->g_Complete[i] = (m_Someone != m_SimonNegative) ? true : false;
 	
 	char aBuf[96];
-	str_format(aBuf, sizeof(aBuf), "%s说： %s！", simonNames[m_Someone], simonModes[m_SimonMode]);
+	str_format(aBuf, sizeof(aBuf), "%s说： %s！", simonNames[m_Someone], simonModes[m_SimonNegative][m_SimonMode]);
 	GameServer()->SendBroadcast(aBuf, -1);
 
 	Controller()->setPlayerTimers(g_Config.m_WwSndMgSimonSays_Offset, g_Config.m_WwSndMgSimonSays_Length);
@@ -47,18 +51,27 @@ void MGSimon::Tick()
 			CNetObj_PlayerInput* input = Char->GetInput();
 			float angle = -atan2(input->m_TargetY, input->m_TargetX) / PI * 180;
 		
-			if ((m_SimonMode == 0 and input->m_Jump&1) or
+			if ((m_SimonMode == 0 and input->m_Jump&1) or // jump
 				(m_SimonMode == 1 and angle >= 75 and angle < 105) or // up
 				(m_SimonMode == 2 and angle <= -75 and angle > -105)) // down
 			{
-				if (m_Someone) // simon didn't say it
+				if (m_Someone != m_SimonNegative) // simon didn't say it or simon says don't
 				{
-					Controller()->g_Complete[i] = false;
-					Char->Die(i, WEAPON_WORLD, timeLeft/1000.f);
-					GameServer()->SendChatTarget(i, "不能听小鬼的。。。");
+					Controller()->killAndLoseMicroGame(i);
+					if (m_Someone)
+						GameServer()->SendChatTarget(i, "不能听小鬼的。。。");
 				}
 				else
 					Controller()->winMicroGame(i);
+			}
+			
+			// reduced timer for someone says don't
+			if (timeLeft < 2700 && m_SimonNegative && m_Someone) {
+				if (!Controller()->g_Complete[i]) {
+					Controller()->killAndLoseMicroGame(i);
+					if (m_Someone)
+						GameServer()->SendChatTarget(i, "不能听小鬼的。。。");
+				}
 			}
 		}
 	}

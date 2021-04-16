@@ -356,7 +356,7 @@ void CGameControllerWarioWare::doGameOver()
 		char name[128];
 
 		str_format(name, sizeof(name), "%s'%s'%s",
-			(finalWinners.size() > 1 and i == finalWinners.size()-1) ? "和" : "",
+			(finalWinners.size() > 1 and i == finalWinners.size()-1) ? "和 " : "",
 			Server()->ClientName(finalWinners[i]),
 			(finalWinners.size() > 1 and i < finalWinners.size()-2) ? ", " : " "
 		);
@@ -392,6 +392,16 @@ void CGameControllerWarioWare::winMicroGame(int client)
 	GameServer()->CreateSound(Char->m_Pos, SOUND_HIT);
 	GameServer()->CreateSoundGlobal(SOUND_CTF_CAPTURE, client);
 	GameServer()->CreateDeath(Char->m_Pos, client);
+}
+
+void CGameControllerWarioWare::killAndLoseMicroGame(int client, int killer, int weapon)
+{
+	CCharacter *Char = GameServer()->GetPlayerChar(client);
+	if (not Char) return;
+	
+	g_Complete[client] = false;
+	float timeLeft = getTimeLength() - getTimer();
+	Char->Die(killer, weapon, timeLeft/1000.0f);
 }
 
 int CGameControllerWarioWare::OnCharacterDeath(class CCharacter *pVictim, class CPlayer *pKiller, int Weapon)

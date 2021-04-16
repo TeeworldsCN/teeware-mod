@@ -3,7 +3,15 @@
 #include <engine/shared/config.h>
 #include "dontmove.h"
 
-const char *modes[2] = {"快站好，不要动！", "动起来，不要停！"};
+const char *modes[7][2] = {
+	{"不要动，快乖乖站好！", "不要停，大家动起来！"},
+	{"快站好，不要不老实！", "动起来，不要傻站着！"},
+	{"快乖乖站好，不要动！", "大家动起来，不要停！"},
+	{"不要不老实，快站好！", "不要傻站着，动起来！"},
+	{"快站好，不要动！", "动起来，不要停！"},
+	{"不要动，快站好！", "不要停，动起来！"},
+	{"一二三木头人，谁动谁是小狗！", "一二三汽车人，谁不动谁爆炸！"}
+};
 
 
 MGDontMove::MGDontMove(CGameContext* pGameServer, CGameControllerWarioWare* pController) : Microgame(pGameServer, pController)
@@ -14,8 +22,9 @@ MGDontMove::MGDontMove(CGameContext* pGameServer, CGameControllerWarioWare* pCon
 
 void MGDontMove::Start()
 {
+	m_Phrase = rand() % 2;
 	m_Mode = rand() % 2;			
-	GameServer()->SendBroadcast(modes[m_Mode], -1);
+	GameServer()->SendBroadcast(modes[m_Phrase][m_Mode], -1);
 	Controller()->setPlayerTimers(g_Config.m_WwSndMgDontMove_Offset, g_Config.m_WwSndMgDontMove_Length);
 	for (int i=0; i<MAX_CLIENTS; i++)
 	{
@@ -47,8 +56,7 @@ void MGDontMove::Tick()
 			if ((not m_Mode and (Char->IsMoving() or Char->GetInput()->m_Hook&1 or Char->GetInput()->m_Fire&1 or Char->GetInput()->m_Jump==1)) or // don't move
 				(m_Mode and (not Char->IsMoving() and (Char->Core()->m_Vel.x < 1 and Char->Core()->m_Vel.x > -1) and (Char->Core()->m_Vel.y < 1 and Char->Core()->m_Vel.y > -1)))) // don't stop moving
 			{
-				Controller()->g_Complete[i] = false;
-				Char->Die(i, WEAPON_WORLD, timeLeft/1000.f);
+				Controller()->killAndLoseMicroGame(i);
 			}
 		}
 	}
